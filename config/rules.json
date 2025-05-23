@@ -3,6 +3,8 @@
     "inicio": "08:00",
     "fim": "18:00"
   },
-  "portas_proibidas": [22, 3389],
-  "limite_falhas_login": 3
+  "portas_proibidas": ["23", "25", "445"],
+  "falhas_login": {
+    "limite": 3
+  }
 }

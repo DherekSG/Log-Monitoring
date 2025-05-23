@@ -1,26 +1,22 @@
-from src.rules_engine import fora_do_horario, porta_proibida, detectar_falhas
-from src.alert_manager import salvar_alerta
 import csv
+from src.rules_engine import fora_do_horario, porta_proibida, detectar_falhas, falhas_alertas
 
-LOG_FILE = 'logs/sample_log.csv'
+LOG_PATH = "logs/sample_log.csv"  # caminho correto para seu log
 
 def processar_log():
-    with open(LOG_FILE, newline='') as csvfile:
+    tentativas_falha = {}
+    alertas_falhas_login = []
+
+    with open(LOG_PATH, newline='') as csvfile:
         leitor = csv.DictReader(csvfile)
         for linha in leitor:
-            horario = linha['timestamp']
-            porta = int(linha['port'])
-            status = linha['status']
-            ip = linha['ip_address']
-
-            if fora_do_horario(horario):
-                salvar_alerta("fora_do_horario", linha)
-
-            if porta_proibida(porta):
-                salvar_alerta("porta_proibida", linha)
-
-            if detectar_falhas(status, ip):
-                salvar_alerta("falhas_login", linha)
+            fora_do_horario(linha)
+            porta_proibida(linha)
+            detectar_falhas(linha, tentativas_falha, limite=3)
+    
+    print("Alertas de falha login repetida detectados:")
+    for alerta in falhas_alertas:
+        print(alerta)
 
 if __name__ == "__main__":
     processar_log()

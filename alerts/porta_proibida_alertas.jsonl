@@ -1,0 +1,1 @@
+{"registro": {"timestamp": "2025-05-21 22:30:00", "username": "joao", "ip_address": "192.168.0.10", "port": "22", "status": "failed"}, "detalhes": "Porta 22 est\u00e1 na lista de portas proibidas", "tipo_alerta": "porta_proibida", "detectado_em": "2025-05-22 23:01:01"}
