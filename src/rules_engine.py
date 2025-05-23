@@ -16,7 +16,7 @@ LIMITE_FALHAS = regras["limite_falhas_login"]
 falhas_por_ip = {}
 
 def fora_do_horario(horario_str: str) -> bool:
-    hora = datetime.strptime(horario_str, "%H:%M").time()
+    hora = datetime.strptime(horario_str, "%Y-%m-%d %H:%M:%S").time()
     return hora < HORARIO_INICIO or hora > HORARIO_FIM
 
 def porta_proibida(porta: int) -> bool:

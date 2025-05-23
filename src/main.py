@@ -8,15 +8,15 @@ def processar_log():
     with open(LOG_FILE, newline='') as csvfile:
         leitor = csv.DictReader(csvfile)
         for linha in leitor:
-            horario = linha['hora']
-            porta = int(linha['porta'])
+            horario = linha['timestamp']
+            porta = int(linha['port'])
             status = linha['status']
-            ip = linha['ip']
+            ip = linha['ip_address']
 
             if fora_do_horario(horario):
                 salvar_alerta("fora_do_horario", linha)
 
-            if porta_proibida(int(porta)):
+            if porta_proibida(porta):
                 salvar_alerta("porta_proibida", linha)
 
             if detectar_falhas(status, ip):
