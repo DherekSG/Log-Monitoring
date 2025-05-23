@@ -1,4 +1,6 @@
-import pandas as pd 
+import csv
 
-def load_logs(path):
-    return pd.read_csv(path, parse_dates=['timestamp'])
+def carregar_csv(caminho: str) -> list:
+    """Carrega um arquivo CSV e retorna como lista de dicionários"""
+    with open(caminho, newline='') as csvfile:
+        return list(csv.DictReader(csvfile))

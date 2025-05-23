@@ -1,5 +1,8 @@
 {
-  "horario_permitido": ["08:00", "18:00"],
+  "horario_permitido": {
+    "inicio": "08:00",
+    "fim": "18:00"
+  },
   "portas_proibidas": [22, 3389],
-  "falhas_login_limite": 3
+  "limite_falhas_login": 3
 }

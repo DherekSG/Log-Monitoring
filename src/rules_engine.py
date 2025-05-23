@@ -1,16 +1,30 @@
-import pandas as pd
-import numpy as np
-from datetime import time
+import json
+from datetime import datetime, time
+import os
 
 
-def fora_do_horario(timestamp, horario_inicio, horario_fim):
-    hora = timestamp.time()
-    return not (horario_inicio <= hora <= horario_fim)
+REGRAS_PATH = os.path.join("config", "rules.json")
+with open(REGRAS_PATH) as f:
+    regras = json.load(f)
 
-def porta_fechada(porta, porta_fechada):
-    return porta in porta_proibidas
 
-def detectar_falhas(df, limite):
-    falhas = df[df['status'] == 'failed']
-    counts = falhas.groupby(['username', 'ip_address']).size()
-    return counts[counts > limite].reset_index(name='tentativas')
+HORARIO_INICIO = datetime.strptime(regras["horario_permitido"]["inicio"], "%H:%M").time()
+HORARIO_FIM = datetime.strptime(regras["horario_permitido"]["fim"], "%H:%M").time()
+PORTAS_PROIBIDAS = regras["portas_proibidas"]
+LIMITE_FALHAS = regras["limite_falhas_login"]
+
+falhas_por_ip = {}
+
+def fora_do_horario(horario_str: str) -> bool:
+    hora = datetime.strptime(horario_str, "%H:%M").time()
+    return hora < HORARIO_INICIO or hora > HORARIO_FIM
+
+def porta_proibida(porta: int) -> bool:
+    return porta in PORTAS_PROIBIDAS
+
+def detectar_falhas(status: str, ip: str) -> bool:
+    if status.lower() == "falha":
+        falhas_por_ip[ip] = falhas_por_ip.get(ip, 0) + 1
+    else:
+        falhas_por_ip[ip] = 0
+    return falhas_por_ip[ip] >= LIMITE_FALHAS
